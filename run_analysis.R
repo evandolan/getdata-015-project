@@ -161,29 +161,58 @@ names(experiments_mean_std) <- descriptive_col_names
 #   of each variable for each activity and each subject.
 split_by_subject <- split(experiments_mean_std, experiments_mean_std$subject)
 subject_df <- as.data.frame(split_by_subject[1])
+colnames(subject_df)[length(colnames(subject_df))] <- "activity"
+split_by_act <- split(subject_df, subject_df$activity)
+activity_df <- as.data.frame(split_by_act[1])
+laying <- colMeans(activity_df[,1:(length(activity_df)-2)])
 
-names(subject_df)
-split_by_activity <- split(subject_df, subject_df[(length(subject_df))])
-sub1_means <- sapply(split_by_activity, function(x) { colMeans(x[1:(length(x)-2)]) })
+activity_df2 <- as.data.frame(split_by_act[2])
+sitting <- colMeans(activity_df2[, 1:(length(activity_df2)-2)])
 
-solve(sub1_means)
-?melt
+lay_sit <- rbind(laying, sitting)
 
-acitivty_df <- as.data.frame(split_by_activity[1])
-dim(acitivty_df)
-colMeans(acitivty_df[1:(length(acitivty_df)-2)])
-lapply(acitivty_df[1:(length(acitivty_df)-2)], colMeans)
-dim(acitivty_df[1:(length(acitivty_df)-2)])
-#
+get_average_for_activities <- function(subject_df, subject_number) {
+    avgs_df <- data.frame()
+    
+    # Change name of last column to be "activity"
+    colnames(subject_df)[length(colnames(subject_df))] <- "activity"
+    
+    # Split the data frame for the subject by activity
+    split_by_act <- split(subject_df, subject_df$activity)
+    
+    # Iterate through the list and calculate averages of each variable for each activity
+    for(i in 1:length(split_by_act)) {
+        # Add means to the avgs_df data frame
+        #avgs_df <- cbind(avgs_df, as.data.frame(split_by_act[i])[68][,1])
+        activity_values <- as.data.frame(split_by_act[subject_number])
+        col_means_for_activity <- colMeans(activity_values[, 1:(length(activity_values)-2)])
+        col_means_for_activity <- as.data.frame(col_means_for_activity)
+        # Add value for the subject column
+        col_means_for_activity$subject <- 1
+          
+        # Add the average values for this activity to the data frame
+        avgs_df <- rbind(avgs_df, col_means_for_activity)
+    }
+    
+    avgs_df
+}
 
 
-tapply(subject_df, subject_df[length(subject_df)], function(x) { colMeans(x[1:(length(x)-2)]) })
-
-dim(subject_df[1:(length(subject_df)-2)])
-
-
-as.data.frame(split_by_subject[2])$X2.activity
-split_by_subject_and_activity <- split(split_by_subject, split_by_subject$)
-?tapply
-names(experiments_mean_std)
-colMeans(experiments_mean_std[1:(length(experiments_mean_std)-2)])
+get_average_values <- function(experiments_df) {
+    all_avg_values <- data.frame()
+    
+    # Split the dataset by subject numbers
+    split_by_subject <- split(experiments_df, experiments_df$subject)
+    print(length(split_by_subject))
+    # Iterate through the list of subjects and get the average values
+    for(j in 1:length(split_by_subject)) {
+        # Convert the subject into a data frame
+        subject_df <- as.data.frame(split_by_subject[j])
+        
+        # Get averages for all activitys for current subject
+        activity_df <- get_average_for_activities(subject_df, j)
+        all_avg_values <- rbind(all_avg_values, activity_df)
+    }
+    
+    all_avg_values
+}
