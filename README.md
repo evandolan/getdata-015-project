@@ -10,3 +10,8 @@ There is only one R script in this repository and it contains all of my work. Th
 straight forward. Each line of code can run in the order they appear in the file. There are a 
 number of functions in the file. The code used to create the functions are always above any 
 code that calls the functions.
+
+
+The tidydata.txt submitted along with this project is not complete. I was able to create a tidy dataset
+based on only one subject at a time. As a sample, I provided the values for subject 1. My code can produce
+the tidy data for any one subject, but not all at once.

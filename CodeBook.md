@@ -63,3 +63,13 @@ Update the column names of the "experiments_mean_std" variable to the descriptiv
 
 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 -------------------------------------------------------------------------------------------------------------------------------------------------
+My approach for this section was to split the dataset containing all of the observations by subject and then
+by activity. The function "get_average_for_activities" takes a data frame containing all observations for a particular subject 
+and returns a data frame with the averages for each variable for each activity.
+
+I did not finished the next part. The function "get_average_values" attempts to split a dataset by the subject value 
+and then call the "get_average_for_activities" function to get the values for each activity for each subject.
+I did not finish this function. I believe I am close but I ran out of time.
+
+You could manual split the data set (using the built in split function) and pass each of those
+datasets to the "get_average_for_activities" function and you would have all the output required.

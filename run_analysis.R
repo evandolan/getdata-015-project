@@ -3,9 +3,6 @@
 ## Course Project
 ## Evan Dolan
 
-# Setup
-setwd("C:/Users/tina/Documents/Coursera/gettingdata/UCI HAR Dataset")
-
 # Load packages
 install.packages("plyr")
 install.packages("dplyr")
@@ -159,17 +156,6 @@ names(experiments_mean_std) <- descriptive_col_names
 ## Step 5
 #   From the data set in step 4, creates a second, independent tidy data set with the average
 #   of each variable for each activity and each subject.
-split_by_subject <- split(experiments_mean_std, experiments_mean_std$subject)
-subject_df <- as.data.frame(split_by_subject[1])
-colnames(subject_df)[length(colnames(subject_df))] <- "activity"
-split_by_act <- split(subject_df, subject_df$activity)
-activity_df <- as.data.frame(split_by_act[1])
-laying <- colMeans(activity_df[,1:(length(activity_df)-2)])
-
-activity_df2 <- as.data.frame(split_by_act[2])
-sitting <- colMeans(activity_df2[, 1:(length(activity_df2)-2)])
-
-lay_sit <- rbind(laying, sitting)
 
 get_average_for_activities <- function(subject_df, subject_number) {
     avgs_df <- data.frame()
@@ -183,7 +169,6 @@ get_average_for_activities <- function(subject_df, subject_number) {
     # Iterate through the list and calculate averages of each variable for each activity
     for(i in 1:length(split_by_act)) {
         # Add means to the avgs_df data frame
-        #avgs_df <- cbind(avgs_df, as.data.frame(split_by_act[i])[68][,1])
         activity_values <- as.data.frame(split_by_act[subject_number])
         col_means_for_activity <- colMeans(activity_values[, 1:(length(activity_values)-2)])
         col_means_for_activity <- as.data.frame(col_means_for_activity)
@@ -216,3 +201,10 @@ get_average_values <- function(experiments_df) {
     
     all_avg_values
 }
+
+#Get all values for subject 1
+split_by_subject <- split(experiments_mean_std, experiments_mean_std$subject)
+subject_1 <- get_average_for_activities(split_by_subject[1], 1)
+
+# Write out tidy data for one subject to text file
+write.table(subject_1, file = "tidydata.txt", row.name=FALSE)
