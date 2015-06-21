@@ -4,7 +4,7 @@
 ## Evan Dolan
 
 # Setup
-
+setwd("C:/Users/tina/Documents/Coursera/gettingdata/UCI HAR Dataset")
 
 # Load packages
 install.packages("plyr")
@@ -46,7 +46,6 @@ X_train[, "subject"] <- subject_train
 
 ## Merge the training and test sets into one data set
 experiments <- rbind(X_train, X_test)
-head(experiments)
 
 
 ## Step 2
@@ -75,7 +74,6 @@ experiments_mean_std <- experiments[, experiments_col_names_final]
 
 ## Step 3
 #   Uses descriptive activity names to name the activities in the data set
-
 # Join activity labels to experiments dataset based on activity numbers
 experiments_mean_std <- join(experiments_mean_std, activity_labels)
 # Remove activity_number column, no longer needed
@@ -84,7 +82,7 @@ experiments_mean_std$activity_number <- NULL
 
 ## Step 4
 #   Appropriately labels the data set with descriptive variable names. 
-# Need get_descriptive_variable_names func here
+# Get the column names from the dataset
 col_names <- names(experiments_mean_std)
 
 # Interates through a list of column names and returns the descriptive variable name for each
@@ -126,12 +124,6 @@ fix_methods_and_axis <- function(col_name) {
     col_name <- gsub("-Y", "_Y-axis", col_name)
     col_name <- gsub("-Z", "_Z-axis", col_name)
     col_name
-}
-
-# Returns the column name without the method and axis
-remove_tail <- function(col_name) {
-    endIndex <- gregexpr(col_name, pattern = "-")[[1]][1]
-    substring(col_name, 1, endIndex-1)
 }
 
 # Takes a column name and returns the a descriptive variable name
